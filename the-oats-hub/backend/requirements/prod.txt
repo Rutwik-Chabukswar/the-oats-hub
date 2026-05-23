@@ -1,0 +1,9 @@
+# Production requirements
+-r base.txt
+
+# Monitoring
+sentry-sdk[fastapi]>=2.0.0
+
+# Cloud integrations
+razorpay>=1.4.0
+cloudinary>=1.40.0
