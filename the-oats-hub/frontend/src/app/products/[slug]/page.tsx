@@ -5,12 +5,13 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const product = await productService.getProductBySlug(params.slug);
+    const resolvedParams = await params;
+    const product = await productService.getProductBySlug(resolvedParams.slug);
     
     return {
       title: product.name,
@@ -29,11 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function ProductPage({ params }: Props) {
+export default async function ProductPage({ params }: Props) {
+  const resolvedParams = await params;
   return (
     <div className="flex-1 bg-background">
       <Suspense fallback={<ProductDetailSkeleton />}>
-        <ProductDetail slug={params.slug} />
+        <ProductDetail slug={resolvedParams.slug} />
       </Suspense>
     </div>
   );
