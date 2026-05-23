@@ -2,7 +2,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-from app.schemas.product import ProductVariantResponse
+from app.schemas.product import VariantResponse
 
 class AddToCartRequest(BaseModel):
     variant_id: UUID
@@ -16,7 +16,7 @@ class CartItemResponse(BaseModel):
     cart_id: UUID
     variant_id: UUID
     quantity: int
-    variant: ProductVariantResponse
+    variant: VariantResponse
 
     class Config:
         from_attributes = True

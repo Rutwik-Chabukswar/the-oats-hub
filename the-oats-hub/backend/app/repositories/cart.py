@@ -5,7 +5,7 @@ from sqlalchemy import select, delete, update
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.base import BaseRepository
+from app.repositories.base import BaseRepository
 from app.models.cart import Cart, CartItem
 from app.models.product import ProductVariant
 

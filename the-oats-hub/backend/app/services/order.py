@@ -6,7 +6,7 @@ from sqlalchemy import select, func, desc
 from sqlalchemy.orm import selectinload
 
 from app.models.order import Order
-from app.core.exceptions import NotFoundError, ForbiddenError
+from app.core.exceptions import NotFoundError, AuthorizationError
 
 class OrderService:
     def __init__(self, session: AsyncSession):
@@ -55,6 +55,6 @@ class OrderService:
             raise NotFoundError("Order", str(order_id))
 
         if order.user_id != user_id:
-            raise ForbiddenError("You do not have permission to view this order.")
+            raise AuthorizationError("You do not have permission to view this order.")
 
         return order

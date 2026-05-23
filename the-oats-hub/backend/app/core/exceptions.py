@@ -80,6 +80,10 @@ class AuthorizationError(AppError):
         )
 
 
+class ForbiddenError(AuthorizationError):
+    """Raised when the user lacks permission to access a specific resource."""
+    pass
+
 class InactiveUserError(AuthorizationError):
     """Raised when an inactive user tries to log in or access resources."""
 
