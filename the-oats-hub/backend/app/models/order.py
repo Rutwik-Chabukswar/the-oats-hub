@@ -22,6 +22,7 @@ class Order(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
     )
     order_number: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    razorpay_order_id: Mapped[str | None] = mapped_column(String(100), unique=True, index=True, nullable=True)
     
     payment_status: Mapped[str] = mapped_column(String(50), default="pending", index=True, nullable=False)
     fulfillment_status: Mapped[str] = mapped_column(String(50), default="unfulfilled", index=True, nullable=False)

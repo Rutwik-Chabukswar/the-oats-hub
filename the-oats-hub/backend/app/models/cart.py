@@ -17,8 +17,11 @@ if TYPE_CHECKING:
 class Cart(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "carts"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), unique=True, index=True, nullable=False
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), unique=True, index=True, nullable=True
+    )
+    session_id: Mapped[str | None] = mapped_column(
+        unique=True, index=True, nullable=True
     )
 
     # Relationships

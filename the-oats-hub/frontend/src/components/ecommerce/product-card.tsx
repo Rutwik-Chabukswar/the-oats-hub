@@ -22,9 +22,8 @@ export function ProductCard({
   const mainImage = product.images?.[0] || "/placeholder-product.jpg"
   
   // Example variant extraction (assuming basic price tracking on product for UI)
-  // In a real app, this might come from a selected variant or default variant
-  const price = 29900 // Fallback price for demo
-  const compareAtPrice = 39900 // Fallback compare price for demo
+  const price = product.base_price || 0
+  const compareAtPrice = undefined // Fallback compare price for demo
   const isOutOfStock = false // Example state
 
   return (
@@ -44,7 +43,7 @@ export function ProductCard({
           <div className="absolute left-3 top-3 z-20 flex flex-col gap-2">
             {isOutOfStock ? (
               <ProductBadge variant="limited" label="Out of Stock" />
-            ) : compareAtPrice > price ? (
+            ) : compareAtPrice && compareAtPrice > price ? (
               <ProductBadge variant="sale" />
             ) : null}
           </div>

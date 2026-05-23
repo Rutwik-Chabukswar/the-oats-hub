@@ -93,6 +93,17 @@ class InvalidInventoryError(ValidationError):
         super().__init__(message=message)
 
 
+class ConflictError(AppError):
+    """Raised when a resource conflict occurs (e.g., duplicate email)."""
+
+    def __init__(self, message: str = "Resource already exists"):
+        super().__init__(
+            message=message,
+            status_code=409,
+            errors=[message],
+        )
+
+
 class DuplicateSlugError(ConflictError):
     """Raised when a slug collision occurs."""
 
@@ -105,17 +116,6 @@ class DuplicateSKUError(ConflictError):
 
     def __init__(self, sku: str):
         super().__init__(message=f"A variant with SKU '{sku}' already exists")
-
-
-class ConflictError(AppError):
-    """Raised when a resource conflict occurs (e.g., duplicate email)."""
-
-    def __init__(self, message: str = "Resource already exists"):
-        super().__init__(
-            message=message,
-            status_code=409,
-            errors=[message],
-        )
 
 
 class ExternalServiceError(AppError):

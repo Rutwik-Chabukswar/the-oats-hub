@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/types";
-import { authService, TokenResponse } from "@/services/auth.service";
+import { authService } from "@/services/auth.service";
 import { tokenUtils } from "@/lib/token";
 import { LoginInput, RegisterInput } from "@/lib/validations";
 import { queryClient } from "@/lib/query-client";

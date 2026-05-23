@@ -62,3 +62,10 @@ class ProductRepository(BaseRepository[Product]):
         stmt = stmt.offset(skip).limit(limit)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
+
+    async def get_variant_by_id(self, variant_id: UUID):
+        """Fetch a specific product variant."""
+        from app.models.product import ProductVariant
+        stmt = select(ProductVariant).where(ProductVariant.id == variant_id, ProductVariant.is_deleted == False)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()

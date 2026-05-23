@@ -24,8 +24,10 @@ export const queryKeys = {
 
   /** Cart query keys */
   cart: {
+    all: ["cart"] as const,
     current: () => ["cart", "current"] as const,
     items: () => ["cart", "items"] as const,
+    summary: () => ["cart", "summary"] as const,
   },
 
   /** Order query keys */

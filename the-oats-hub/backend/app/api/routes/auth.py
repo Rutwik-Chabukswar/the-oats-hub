@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.dependencies import get_current_active_user, get_current_admin_user
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import UserCreate, UserLogin, UserResponse, Token, RefreshTokenRequest
+from app.schemas.auth import UserCreate, UserUpdate, UserLogin, UserResponse, Token, RefreshTokenRequest
 from app.schemas.base import SuccessResponse
 from app.services.auth import AuthService
 
@@ -74,6 +74,28 @@ async def get_my_profile(
 ):
     """Return the profile of the currently authenticated active user."""
     return SuccessResponse(data=current_user)
+
+@router.patch(
+    "/me",
+    response_model=SuccessResponse[UserResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Update current user profile",
+)
+async def update_my_profile(
+    update_data: UserUpdate,
+    session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Update profile details of the currently authenticated user."""
+    if update_data.full_name is not None:
+        current_user.full_name = update_data.full_name
+    if update_data.email is not None:
+        current_user.email = update_data.email
+        
+    await session.commit()
+    await session.refresh(current_user)
+    
+    return SuccessResponse(message="Profile updated successfully", data=current_user)
 
 
 @router.get(

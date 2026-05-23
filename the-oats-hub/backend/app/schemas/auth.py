@@ -4,6 +4,7 @@ Auth and User Schemas — Data validation for authentication routes.
 
 from uuid import UUID
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
@@ -16,6 +17,12 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     """Schema for user registration."""
     password: str = Field(..., min_length=8, max_length=128)
+
+
+class UserUpdate(BaseModel):
+    """Schema for updating user profile."""
+    full_name: Optional[str] = Field(None, min_length=2, max_length=255)
+    email: Optional[EmailStr] = None
 
 
 class UserLogin(BaseModel):

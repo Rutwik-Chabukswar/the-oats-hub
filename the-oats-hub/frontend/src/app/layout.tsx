@@ -46,6 +46,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Header } from "@/components/shared/layout/header";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,7 +56,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          <main className="flex-1 flex flex-col">{children}</main>
+        </Providers>
       </body>
     </html>
   );

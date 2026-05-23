@@ -32,3 +32,10 @@ The repository is structured as a monorepo for easier management of full-stack f
 - `backend/`: Contains the FastAPI application.
 
 *Note: In production, these are deployed as separate services. Vercel for the frontend, and a containerized PaaS (like AWS ECS or Render) for the backend.*
+
+## Commerce Architecture (Cart & Session)
+
+1. **Inventory Validation**: The `CartService` is the ultimate source of truth for stock validation. It checks the current `stock_quantity` of a `ProductVariant` *before* inserting or updating any `CartItem`.
+2. **Session Commerce**: The `Cart` model implements dual-identity tracking (`user_id` and `session_id`). This permits anonymous guest carts that can be seamlessly merged into a `user_id` upon login.
+3. **Optimistic UI**: The frontend utilizes `TanStack Query`'s `useMutation` to trigger immediate UI updates via cache manipulation (`setQueryData`) when cart operations succeed, eliminating perceived network latency.
+4. **Cart Lifecycle**: Carts are long-lived and soft-deleted upon successful checkout, creating a historical record of intent.
