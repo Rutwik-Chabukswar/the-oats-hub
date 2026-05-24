@@ -128,7 +128,7 @@ export function WellnessStorytelling() {
         headline="Small batch. Big difference."
         body="Our artisan peanut butters are stone-ground in small batches to preserve natural oils, flavour, and texture. No hydrogenated oils, no palm oil — just honest, rich nutrition."
         imageSide="right"
-        imageUrl="/products/yogabar.png"
+        imageUrl="/products/yogabar-oats.png"
         badgeText="Artisan Crafted"
       />
     </>
