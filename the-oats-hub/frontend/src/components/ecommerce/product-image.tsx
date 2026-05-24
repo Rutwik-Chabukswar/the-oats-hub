@@ -47,8 +47,9 @@ export function ProductImage({
           width={!fill ? width : undefined}
           height={!fill ? height : undefined}
           priority={priority}
+          unoptimized
           className={cn(
-            "object-cover transition-all duration-500",
+            "object-cover transition-all duration-[2000ms]",
             isLoading ? "scale-105 blur-sm" : "scale-100 blur-0"
           )}
           onLoad={() => setIsLoading(false)}
