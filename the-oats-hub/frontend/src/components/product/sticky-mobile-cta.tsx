@@ -59,6 +59,25 @@ export function StickyMobileCTA({ product, selectedVariant }: StickyMobileCTAPro
               disabled={isOutOfStock || !targetVariant || addToCart.isPending}
               onClick={() => {
                 if (targetVariant) {
+                  // Find the main product image to get its starting coordinates
+                  const imgElement = document.getElementById("pdp-main-image");
+                  if (imgElement && product.images && product.images.length > 0) {
+                    const rect = imgElement.getBoundingClientRect();
+                    const imageUrl = typeof product.images[0] === 'string' 
+                      ? product.images[0] 
+                      : (product.images[0] as any).image_url;
+                      
+                    window.dispatchEvent(
+                      new CustomEvent("fly-to-cart", {
+                        detail: {
+                          id: Date.now().toString(),
+                          imageUrl: imageUrl || "/placeholder-product.jpg",
+                          startRect: rect,
+                        },
+                      })
+                    );
+                  }
+
                   addToCart.mutate({ variant_id: targetVariant.id, quantity: 1 });
                 }
               }}

@@ -48,6 +48,7 @@ export const metadata: Metadata = {
 
 import { Header } from "@/components/shared/layout/header";
 import { AmbientCursor } from "@/components/ui/ambient-cursor";
+import { FlyToCart } from "@/components/ui/fly-to-cart";
 
 export default function RootLayout({
   children,
@@ -58,6 +59,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} dark h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
         <AmbientCursor />
+        <FlyToCart />
         <Providers>
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>

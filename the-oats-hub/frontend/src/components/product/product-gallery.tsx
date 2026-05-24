@@ -34,6 +34,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
     <div className="flex flex-col gap-4 relative md:static">
       {/* Main Image Container */}
       <div 
+        id="pdp-main-image"
         ref={containerRef}
         className="relative aspect-square md:aspect-[4/5] rounded-2xl bg-[#0F0D0A] border border-brand-white/[0.04] group touch-pan-y"
         onMouseEnter={() => setIsHovering(true)}

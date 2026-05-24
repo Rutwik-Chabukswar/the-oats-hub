@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useProducts } from "@/hooks/useProducts";
+import { useInfiniteProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/ecommerce/product-card";
 import { ProductGridSkeleton } from "@/components/ui/product-skeleton";
 import { ErrorState, EmptyState } from "@/components/ui/error-state";
@@ -16,18 +16,26 @@ export function ProductListing() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const page = Number(searchParams.get("page")) || 1;
   const category_id = searchParams.get("category_id") || undefined;
   const search = searchParams.get("search") || undefined;
 
   const [searchValue, setSearchValue] = React.useState(search || "");
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isRestored = useRef(false);
 
   React.useEffect(() => {
     setSearchValue(search || "");
   }, [search]);
 
-  const { data, isLoading, error } = useProducts({ 
-    page, 
+  const { 
+    data, 
+    isLoading, 
+    error, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useInfiniteProducts({ 
     per_page: 12,
     category_id,
     search,
@@ -36,6 +44,68 @@ export function ProductListing() {
 
   const { data: categories } = useCategories();
 
+  // Scroll memory logic
+  useEffect(() => {
+    const scrollKey = `scroll_pos_${pathname}_${searchParams.toString()}`;
+
+    const handleScroll = () => {
+      sessionStorage.setItem(scrollKey, window.scrollY.toString());
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [pathname, searchParams]);
+
+  // Restore scroll position once data is populated
+  useEffect(() => {
+    if (!isLoading && data?.pages && !isRestored.current) {
+      const scrollKey = `scroll_pos_${pathname}_${searchParams.toString()}`;
+      const savedPosition = sessionStorage.getItem(scrollKey);
+      if (savedPosition) {
+        // Use a short timeout to ensure DOM paints the infinite query results
+        setTimeout(() => {
+          window.scrollTo({ top: parseInt(savedPosition, 10), behavior: "instant" });
+          isRestored.current = true;
+        }, 100);
+      } else {
+        isRestored.current = true;
+      }
+    }
+  }, [isLoading, data, pathname, searchParams]);
+
+  // Intersection Observer for Infinite Scroll
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element) return;
+
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: "400px",
+      threshold: 0,
+    });
+
+    observerRef.current.observe(element);
+
+    return () => {
+      if (observerRef.current && element) {
+        observerRef.current.unobserve(element);
+      }
+    };
+  }, [handleObserver]);
+
   const updateFilters = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -43,12 +113,13 @@ export function ProductListing() {
     } else {
       params.delete(key);
     }
-    // Reset to page 1 on filter change
-    if (key !== "page") {
-      params.set("page", "1");
-    }
+    // Delete page param if it was there since we don't use it anymore
+    params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
   };
+
+  // Flatten the pages to get all products
+  const products = data?.pages.flatMap((page) => page.data) || [];
 
   return (
     <div className="container relative z-10 px-6 md:px-12 mx-auto max-w-7xl py-16 md:py-24">
@@ -115,9 +186,9 @@ export function ProductListing() {
       {/* ── Product Grid ── */}
       {isLoading ? (
         <ProductGridSkeleton count={12} />
-      ) : error || !data?.success ? (
+      ) : error || (!data?.pages?.length) ? (
         <ErrorState message="Failed to load products. Please try again." />
-      ) : data.data.length === 0 ? (
+      ) : products.length === 0 ? (
         <EmptyState 
           title="No products found" 
           message="Try adjusting your filters or search query." 
@@ -129,33 +200,17 @@ export function ProductListing() {
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 md:gap-x-8 gap-y-12 md:gap-y-16">
-            {data.data.map((product) => (
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
-          {/* ── Pagination ── */}
-          {data.total_pages > 1 && (
-            <div className="mt-20 pt-10 border-t border-brand-white/[0.06] flex justify-between items-center max-w-md mx-auto">
-              <button 
-                disabled={page <= 1}
-                onClick={() => updateFilters("page", String(page - 1))}
-                className="text-xs tracking-[0.2em] uppercase text-brand-white/50 hover:text-brand-gold transition-colors disabled:opacity-30 disabled:hover:text-brand-white/50"
-              >
-                Previous
-              </button>
-              <div className="flex items-center px-4 font-serif italic text-brand-white/60 text-lg">
-                {page} <span className="mx-2 not-italic text-sm text-brand-white/20">/</span> {data.total_pages}
-              </div>
-              <button 
-                disabled={page >= data.total_pages}
-                onClick={() => updateFilters("page", String(page + 1))}
-                className="text-xs tracking-[0.2em] uppercase text-brand-white/50 hover:text-brand-gold transition-colors disabled:opacity-30 disabled:hover:text-brand-white/50"
-              >
-                Next
-              </button>
-            </div>
-          )}
+          {/* ── Infinite Scroll Sentinel ── */}
+          <div ref={loadMoreRef} className="h-20 w-full mt-10 flex items-center justify-center">
+            {isFetchingNextPage && (
+              <div className="h-6 w-6 rounded-full border-2 border-brand-gold/20 border-t-brand-gold animate-spin" />
+            )}
+          </div>
         </motion.div>
       )}
     </div>

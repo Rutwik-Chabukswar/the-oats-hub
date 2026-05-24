@@ -169,14 +169,33 @@
 
 @layer utilities {
   .shimmer-gold {
+    position: relative;
+    overflow: hidden;
+    background: #0A0A0A;
+  }
+
+  .shimmer-gold::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     background: linear-gradient(
       90deg,
-      #0F0D0A 0%,
+      rgba(10, 10, 10, 0) 0%,
       rgba(201, 168, 76, 0.08) 50%,
-      #0F0D0A 100%
+      rgba(10, 10, 10, 0) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 2s infinite linear;
+  }
+
+  @keyframes cartBounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .cart-bounce-animation {
+    animation: cartBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 }
 

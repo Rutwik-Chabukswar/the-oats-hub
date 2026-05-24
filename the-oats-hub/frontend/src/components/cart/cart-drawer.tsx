@@ -31,7 +31,7 @@ export function CartDrawer() {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger 
         render={
-          <Button variant="ghost" size="icon" className="relative group text-brand-black dark:text-brand-white hover:bg-transparent">
+          <Button id="nav-cart-icon" variant="ghost" size="icon" className="relative group text-brand-black dark:text-brand-white hover:bg-transparent">
             <ShoppingBag className="h-6 w-6 group-hover:text-brand-gold transition-colors" />
             {itemCount > 0 && (
               <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-brand-gold text-[10px] font-bold text-brand-black flex items-center justify-center">
