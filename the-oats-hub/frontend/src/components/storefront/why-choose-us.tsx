@@ -1,8 +1,9 @@
 "use client";
 
-import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
+import { ScrollReveal } from "./scroll-reveal";
 import { ShieldCheck, Recycle, Award, Zap } from "lucide-react";
 import { CinematicHeader } from "@/components/ui/cinematic-header";
+import { motion } from "framer-motion";
 
 const reasons = [
   {
@@ -47,26 +48,37 @@ export function WhyChooseUs() {
           </p>
         </ScrollReveal>
 
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {reasons.map((reason) => {
-            const Icon = reason.icon;
-            return (
-              <StaggerItem key={reason.title}>
-                <div className="group p-10 md:p-12 rounded-2xl border border-brand-white/[0.04] bg-[#0F0D0A] transition-all duration-500 hover:border-brand-gold/20 hover:bg-[#13110C]">
+        <div className="relative flex overflow-hidden w-full -mx-6 px-6 md:mx-0 md:px-0">
+          {/* Gradient Masks for Premium Fade */}
+          <div className="absolute inset-y-0 left-0 w-16 md:w-40 bg-gradient-to-r from-brand-black to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-16 md:w-40 bg-gradient-to-l from-brand-black to-transparent z-10 pointer-events-none" />
+          
+          <motion.div
+            className="flex gap-6 md:gap-8 w-max"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ ease: "linear", duration: 35, repeat: Infinity }}
+          >
+            {[...reasons, ...reasons].map((reason, i) => {
+              const Icon = reason.icon;
+              return (
+                <div 
+                  key={`${reason.title}-${i}`} 
+                  className="w-[280px] md:w-[400px] shrink-0 group p-8 md:p-12 rounded-2xl border border-brand-white/[0.04] bg-[#0F0D0A] transition-all duration-500 hover:border-brand-gold/20 hover:bg-[#13110C]"
+                >
                   <div className="h-12 w-12 rounded-full border border-brand-gold/20 flex items-center justify-center mb-8 transition-colors duration-500 group-hover:border-brand-gold/50 group-hover:bg-brand-gold/5">
                     <Icon className="h-5 w-5 text-brand-gold/80 group-hover:text-brand-gold transition-colors duration-500" />
                   </div>
-                  <h3 className="font-serif text-2xl text-brand-white tracking-tight mb-3">
+                  <h3 className="font-serif text-xl md:text-2xl text-brand-white tracking-tight mb-3">
                     {reason.title}
                   </h3>
                   <p className="text-sm md:text-base leading-relaxed text-brand-white/50 font-light">
                     {reason.description}
                   </p>
                 </div>
-              </StaggerItem>
-            );
-          })}
-        </StaggerContainer>
+              );
+            })}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
