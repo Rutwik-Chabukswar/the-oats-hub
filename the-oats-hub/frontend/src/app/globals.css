@@ -166,3 +166,25 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .shimmer-gold {
+    background: linear-gradient(
+      90deg,
+      #0F0D0A 0%,
+      rgba(201, 168, 76, 0.08) 50%,
+      #0F0D0A 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
