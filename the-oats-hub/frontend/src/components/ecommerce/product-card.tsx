@@ -1,4 +1,8 @@
+"use client";
+
+import { useRef } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { ProductImage } from "./product-image"
 import { PriceDisplay } from "./price-display"
 import { RatingDisplay } from "./rating-display"
@@ -17,6 +21,9 @@ export function ProductCard({
   className,
   priorityImage = false,
 }: ProductCardProps) {
+  const router = useRouter();
+  const prefetchTimer = useRef<NodeJS.Timeout | null>(null);
+
   // Use first image or fallback
   let mainImage = "/placeholder-product.jpg";
   if (product.images && product.images.length > 0) {
@@ -32,6 +39,34 @@ export function ProductCard({
   const compareAtPrice = undefined
   const isOutOfStock = false
 
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const url = `/products/${product.slug}`;
+    
+    // @ts-ignore - startViewTransition is relatively new
+    if (!document.startViewTransition) {
+      router.push(url);
+      return;
+    }
+
+    // @ts-ignore
+    document.startViewTransition(() => {
+      router.push(url);
+    });
+  };
+
+  const handleMouseEnter = () => {
+    prefetchTimer.current = setTimeout(() => {
+      router.prefetch(`/products/${product.slug}`);
+    }, 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (prefetchTimer.current) {
+      clearTimeout(prefetchTimer.current);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -41,17 +76,22 @@ export function ProductCard({
         "hover:border-brand-gold/20 hover:bg-[#13110C]",
         className
       )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <Link href={`/products/${product.slug}`} className="absolute inset-0 z-10">
+      <Link 
+        href={`/products/${product.slug}`} 
+        className="absolute inset-0 z-10"
+        onClick={handleNavigation}
+      >
         <span className="sr-only">View {product.name}</span>
       </Link>
 
       {/* ── Image Area ── */}
-      {/* 
-        - aspect-[4/5] = fixed height, never reflows 
-        - overflow-hidden = scale stays contained 
-      */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-xl bg-[#0F0D0A] mb-5">
+      <div 
+        className="relative w-full aspect-[4/5] overflow-hidden rounded-xl bg-[#0F0D0A] mb-5"
+        style={{ viewTransitionName: `product-image-${product.slug}` }}
+      >
         {/* Ambient background glow inside the image container */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.05)_0%,_transparent_70%)] pointer-events-none z-0" />
         

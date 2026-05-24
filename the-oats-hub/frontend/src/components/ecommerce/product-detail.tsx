@@ -43,7 +43,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
             {/* Left: Gallery */}
             <div className="w-full">
               <div className="md:sticky md:top-24">
-                <ProductGallery images={product.images || []} productName={product.name} />
+                <ProductGallery images={product.images || []} productName={product.name} productSlug={product.slug} />
               </div>
             </div>
 

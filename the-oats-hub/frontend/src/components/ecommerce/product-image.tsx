@@ -26,10 +26,20 @@ export function ProductImage({
 }: ProductImageProps) {
   const [isLoading, setIsLoading] = React.useState(true)
 
+  // Generate Cloudinary blur placeholder automatically
+  let blurUrl = "";
+  if (typeof src === "string" && src.includes("res.cloudinary.com")) {
+    const parts = src.split("/upload/");
+    if (parts.length === 2) {
+      // 20px wide, scaled, blurred, low quality
+      blurUrl = `${parts[0]}/upload/w_20,c_scale,e_blur:200,q_auto:low/${parts[1]}`;
+    }
+  }
+
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-md bg-muted",
+        "relative overflow-hidden rounded-md bg-muted",
         {
           "aspect-square": aspectRatio === "square",
           "aspect-[3/4]": aspectRatio === "portrait",
@@ -37,6 +47,11 @@ export function ProductImage({
         },
         className
       )}
+      style={{
+        backgroundImage: blurUrl ? `url(${blurUrl})` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
       {...props}
     >
       {src && (typeof src !== "string" || src.trim() !== "") ? (
@@ -49,8 +64,8 @@ export function ProductImage({
           priority={priority}
           unoptimized
           className={cn(
-            "object-cover transition-all duration-[2000ms]",
-            isLoading ? "scale-105 blur-sm" : "scale-100 blur-0"
+            "object-cover transition-opacity duration-800 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            isLoading ? "opacity-0" : "opacity-100"
           )}
           onLoad={() => setIsLoading(false)}
         />

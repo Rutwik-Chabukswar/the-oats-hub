@@ -1,111 +1,126 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Package, ArrowRight, Home } from "lucide-react";
+import { CheckCircle2, Package, ArrowRight, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/utils/format";
+import confetti from "canvas-confetti";
 
 interface SuccessStateProps {
   order: any;
 }
 
 export function SuccessState({ order }: SuccessStateProps) {
+  useEffect(() => {
+    const duration = 3.5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // Confetti colors matching luxury aesthetic: Gold, White, Dark Gold
+      const colors = ['#C9A84C', '#ffffff', '#8E793E'];
+
+      confetti({
+        ...defaults, particleCount,
+        colors,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+      });
+      confetti({
+        ...defaults, particleCount,
+        colors,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const whatsappMessage = encodeURIComponent(
+    "I just ordered from The Oats Hub! Their clean label ingredients and premium quality look amazing. Check them out: https://the-oats-hub.com"
+  );
+  const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
+
+  // estimate delivery 3 days from now
+  const deliveryDate = new Date();
+  deliveryDate.setDate(deliveryDate.getDate() + 3);
+  const formattedDelivery = deliveryDate.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' });
+
   return (
-    <div className="flex flex-col items-center justify-center p-6 md:p-12 max-w-3xl mx-auto w-full">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] p-6 max-w-5xl mx-auto w-full relative z-10">
       <motion.div 
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="h-24 w-24 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center mb-8 relative"
+        transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
+        className="text-brand-gold mb-8"
       >
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring" }}
-          className="absolute inset-0 border-2 border-brand-gold rounded-full"
-        />
-        <CheckCircle2 className="h-12 w-12" />
+        <CheckCircle2 className="h-24 w-24 drop-shadow-[0_0_30px_rgba(201,168,76,0.3)]" />
       </motion.div>
       
       <motion.div 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="text-center space-y-3 mb-10"
-      >
-        <h2 className="text-4xl font-serif tracking-tight">Thank you.</h2>
-        <p className="text-lg text-muted-foreground">
-          Your order has been confirmed and is being prepared.
-        </p>
-      </motion.div>
-
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="w-full bg-card border border-border/50 shadow-premium rounded-2xl overflow-hidden mb-10"
-      >
-        <div className="p-6 bg-muted/30 border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Order Number</p>
-            <p className="font-mono font-semibold text-lg">{order.order_number}</p>
-          </div>
-          <div className="md:text-right">
-            <p className="text-sm text-muted-foreground mb-1">Status</p>
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-gold"></span>
-              </span>
-              <p className="font-semibold capitalize">{order.status}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-6 space-y-6">
-          <div className="flex items-start gap-4">
-            <div className="mt-1 h-10 w-10 rounded-full bg-brand-black/5 dark:bg-brand-white/5 flex items-center justify-center shrink-0">
-              <Package className="h-5 w-5 text-foreground" />
-            </div>
-            <div>
-              <h4 className="font-semibold mb-1">Expected Delivery</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                We'll email you a tracking link once your order has shipped. Standard delivery takes 2-4 business days.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-muted/30 rounded-xl p-5 space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Amount Paid</span>
-              <span className="font-medium">{formatPrice(order.total_amount)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Payment Status</span>
-              <span className="font-medium capitalize text-brand-gold flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                {order.payment_status}
-              </span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="flex flex-col sm:flex-row gap-4 w-full md:w-auto"
+        className="text-center space-y-4 mb-14"
       >
-        <Link href="/products" className="w-full sm:w-auto">
-          <Button className="h-14 px-8 rounded-full bg-brand-gold text-brand-black hover:bg-brand-gold/90 shadow-premium w-full text-base font-semibold">
-            Continue Shopping <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-        <Link href="/account/orders" className="w-full sm:w-auto">
-          <Button variant="outline" className="h-14 px-8 rounded-full w-full text-base font-semibold border-border hover:bg-muted">
-            <Home className="mr-2 h-4 w-4 text-muted-foreground" /> View Account
+        <h2 className="text-sm font-semibold tracking-[0.3em] uppercase text-brand-gold mb-2">Order Confirmed</h2>
+        <h1 className="text-6xl md:text-8xl font-serif tracking-tight text-brand-white leading-none">
+          {order.order_number || "ORD-0000"}
+        </h1>
+      </motion.div>
+
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="w-full bg-[#0F0D0A] border border-brand-white/[0.05] shadow-2xl rounded-3xl overflow-hidden mb-14 flex flex-col md:flex-row"
+      >
+        <div className="p-10 md:p-14 flex-1 border-b md:border-b-0 md:border-r border-brand-white/[0.05] flex flex-col justify-center items-center text-center">
+            <Package className="h-10 w-10 text-brand-white/40 mb-5" />
+            <h4 className="text-brand-white/60 text-sm uppercase tracking-widest font-medium mb-3">Estimated Delivery</h4>
+            <p className="text-3xl md:text-4xl font-serif text-brand-gold mb-2">
+              {formattedDelivery}
+            </p>
+            <p className="text-brand-white/40 text-sm mt-2">
+              Standard Shipping (Pan-India)
+            </p>
+        </div>
+
+        <div className="p-10 md:p-14 flex-1 bg-[#13110C] flex flex-col justify-center items-center text-center">
+            <MessageCircle className="h-10 w-10 text-[#25D366] mb-5" />
+            <h4 className="text-brand-white/60 text-sm uppercase tracking-widest font-medium mb-3">Spread the Word</h4>
+            <p className="text-brand-white/80 text-lg mb-8 leading-relaxed max-w-sm">
+              Loved your experience? Tell a friend about The Oats Hub and share the wellness journey.
+            </p>
+            <a 
+              href={whatsappUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-colors font-semibold tracking-wide"
+            >
+              Share via WhatsApp
+            </a>
+        </div>
+      </motion.div>
+
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="flex justify-center"
+      >
+        <Link href="/products">
+          <Button className="h-16 px-12 rounded-full bg-brand-white text-brand-black hover:bg-brand-white/90 shadow-[0_0_40px_rgba(255,255,255,0.1)] text-lg font-bold tracking-wide transition-transform hover:scale-105 active:scale-95">
+            Explore More <ArrowRight className="ml-3 h-5 w-5" />
           </Button>
         </Link>
       </motion.div>

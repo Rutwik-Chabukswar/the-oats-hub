@@ -27,7 +27,7 @@ const testimonials = [
     quote: "Finally, peanut butter that's actually clean. No junk, just pure flavour. I'm a customer for life.",
     name: "Rahul M.",
     title: "Health Coach",
-    photo: "https://images.unsplash.com/photo-1514063259979-99fc285c5dfc?q=80&w=600&auto=format&fit=crop",
+    photo: "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=600&auto=format&fit=crop",
   },
   {
     quote: "Beautiful packaging, premium quality, and fast delivery. The Oats Hub sets a new standard for wellness brands.",
@@ -119,11 +119,6 @@ export function TrustSection() {
                           unoptimized 
                         />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="bg-brand-black/80 backdrop-blur-sm text-brand-white text-xs font-bold uppercase tracking-widest py-2 px-4 rounded-full border border-brand-white/10 shadow-premium">
-                            Expand
-                          </span>
-                        </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-5xl p-0 overflow-hidden bg-brand-black border-brand-white/10 sm:rounded-2xl">
                       <div className="grid md:grid-cols-2 h-full">

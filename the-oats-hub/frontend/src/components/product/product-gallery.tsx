@@ -9,9 +9,10 @@ import Image from "next/image";
 interface ProductGalleryProps {
   images: string[];
   productName: string;
+  productSlug?: string;
 }
 
-export function ProductGallery({ images, productName }: ProductGalleryProps) {
+export function ProductGallery({ images, productName, productSlug }: ProductGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -40,6 +41,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         onMouseMove={handleMouseMove}
+        style={{ viewTransitionName: productSlug ? `product-image-${productSlug}` : undefined }}
       >
         <AnimatePresence mode="wait">
           <motion.div
