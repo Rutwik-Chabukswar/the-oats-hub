@@ -8,9 +8,11 @@ interface FreeShippingProgressProps {
   thresholdInPaise?: number; // Default to ₹999 (99900 paise)
 }
 
+import { cn } from "@/lib/utils";
+
 export function FreeShippingProgress({ 
   subtotalInPaise, 
-  thresholdInPaise = 99900 
+  thresholdInPaise = 500000 
 }: FreeShippingProgressProps) {
   const isFreeShipping = subtotalInPaise >= thresholdInPaise;
   const amountNeeded = Math.max(0, thresholdInPaise - subtotalInPaise);
@@ -19,23 +21,30 @@ export function FreeShippingProgress({
   return (
     <div className="w-full py-4 px-6 bg-brand-black/5 dark:bg-brand-white/5 border-b border-border">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium">
+        <div className="text-sm font-medium">
           {isFreeShipping ? (
-            <span className="text-brand-gold">You've unlocked free shipping! ✨</span>
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: [1.05, 1], opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="text-green-500 font-bold flex items-center gap-1.5"
+            >
+              You've unlocked free shipping! ✨
+            </motion.div>
           ) : (
             <span>
-              You're <span className="font-bold">{formatPrice(amountNeeded)}</span> away from free shipping
+              <span className="font-bold">{formatPrice(amountNeeded)}</span> away from free shipping
             </span>
           )}
-        </span>
+        </div>
       </div>
       
       <div className="h-1.5 w-full bg-border rounded-full overflow-hidden">
         <motion.div 
-          className="h-full bg-brand-gold rounded-full"
+          className={cn("h-full rounded-full transition-colors duration-500", isFreeShipping ? "bg-green-500" : "bg-brand-gold")}
           initial={{ width: 0 }}
           animate={{ width: `${progressPercentage}%` }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} // smooth ease out
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
       

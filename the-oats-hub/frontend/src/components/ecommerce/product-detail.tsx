@@ -10,6 +10,7 @@ import { ProductFAQ } from "../product/product-faq";
 import { RecommendedProducts } from "../product/recommended-products";
 import { TrustSection } from "../storefront/trust-section";
 import { WellnessStorytelling } from "../storefront/editorial-split";
+import { IngredientTransparency } from "../product/ingredient-transparency";
 
 interface ProductDetailProps {
   slug: string;
@@ -59,6 +60,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
 
       {/* 3. Storytelling & Trust (Reusing Storefront Components) */}
       <WellnessStorytelling />
+
+      {/* 3.5. Ingredient Transparency Diagram */}
+      <IngredientTransparency />
 
       {/* 4. Nutrition & Ingredients */}
       <NutritionSection category={product.category} />

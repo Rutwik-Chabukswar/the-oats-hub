@@ -55,6 +55,7 @@ export function CheckoutFlow() {
 
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
+    mode: "onBlur",
     defaultValues: {
       save_as_default: false,
     },

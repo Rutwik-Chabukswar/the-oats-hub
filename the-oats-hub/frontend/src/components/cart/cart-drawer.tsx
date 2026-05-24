@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Minus, Plus, Trash2, Lock, ShieldCheck, ArrowRight } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2, Lock, ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCart, useUpdateCartItem, useRemoveCartItem } from "@/hooks/useCart";
+import { useCart, useUpdateCartItem, useRemoveCartItem, useAddToCart } from "@/hooks/useCart";
+import { useProducts } from "@/hooks/useProducts";
 import { formatPrice } from "@/utils/format";
 import { PriceDisplay } from "../ecommerce/price-display";
 import { FreeShippingProgress } from "./free-shipping-progress";
@@ -24,8 +25,25 @@ export function CartDrawer() {
   const { data: cart, isLoading } = useCart();
   const updateQuantity = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
+  const addToCart = useAddToCart();
+
+  const { data: productsData } = useProducts({ per_page: 10 });
 
   const itemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
+
+  const upsellProduct = React.useMemo(() => {
+    if (!cart || !productsData) return null;
+    const cartProductIds = new Set(cart.items.map((item) => item.variant?.product_id));
+    return productsData.data.find(
+      (p) => !cartProductIds.has(p.id) && p.variants && p.variants.length > 0 && p.variants[0].stock_quantity > 0
+    ) || null;
+  }, [cart, productsData]);
+
+  const handleUpsellAdd = () => {
+    if (upsellProduct && upsellProduct.variants && upsellProduct.variants.length > 0) {
+      addToCart.mutate({ variant_id: upsellProduct.variants[0].id, quantity: 1 });
+    }
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -44,7 +62,7 @@ export function CartDrawer() {
       />
       
       <SheetContent className="w-full sm:max-w-[480px] flex flex-col p-0 border-l border-border bg-background/95 backdrop-blur-xl shadow-2xl">
-        <SheetHeader className="px-6 py-5 border-b border-border">
+        <SheetHeader className="px-6 py-5 border-b border-border shrink-0">
           <SheetTitle className="flex items-center text-xl font-bold tracking-tight">
             Your Selection 
             <span className="text-muted-foreground text-sm ml-2 font-normal">
@@ -54,7 +72,9 @@ export function CartDrawer() {
         </SheetHeader>
 
         {cart && cart.items.length > 0 && (
-          <FreeShippingProgress subtotalInPaise={cart.totals.subtotal} />
+          <div className="shrink-0">
+            <FreeShippingProgress subtotalInPaise={cart.totals.subtotal} />
+          </div>
         )}
 
         <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-6">
@@ -86,76 +106,135 @@ export function CartDrawer() {
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-8 pb-4">
               <AnimatePresence initial={false}>
-                {cart.items.map((item) => (
-                  <motion.div 
-                    key={item.id} 
-                    layout
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-                    className="group flex gap-5"
-                  >
-                    <div className="relative h-28 w-24 rounded-lg overflow-hidden bg-muted/30 border border-border/50 shrink-0">
+                {cart.items.map((item) => {
+                  const imgUrl = "/placeholder-product.jpg";
+                  
+                  return (
+                    <motion.div 
+                      key={item.id} 
+                      layout
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                      className="group flex gap-5"
+                    >
+                      <div className="relative h-28 w-24 rounded-lg overflow-hidden bg-muted/30 border border-border/50 shrink-0">
+                        <Image
+                          src={imgUrl}
+                          alt={item.variant?.name || "Product"}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          unoptimized
+                        />
+                      </div>
+                      <div className="flex flex-1 flex-col justify-between py-1">
+                        <div>
+                          <div className="flex justify-between items-start gap-2">
+                            <h4 className="font-semibold text-base leading-snug tracking-tight text-foreground pr-4">
+                              {item.variant?.name || "Product"}
+                            </h4>
+                            <button 
+                              onClick={() => removeItem.mutate(item.id)}
+                              className="text-muted-foreground/40 hover:text-destructive transition-colors shrink-0 mt-0.5"
+                              aria-label="Remove item"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1.5">
+                            {item.variant?.sku ? `SKU: ${item.variant.sku}` : "Standard Variant"}
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-end justify-between mt-4">
+                          <div className="flex items-center border border-border rounded-full bg-background overflow-hidden h-9">
+                            <button
+                              className="w-9 h-full flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                              disabled={item.quantity <= 1 || updateQuantity.isPending}
+                              onClick={() => updateQuantity.mutate({ item_id: item.id, quantity: item.quantity - 1 })}
+                            >
+                              <Minus className="h-3.5 w-3.5" />
+                            </button>
+                            <span className="w-8 text-center text-sm font-medium">
+                              {item.quantity}
+                            </span>
+                            <button
+                              className="w-9 h-full flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                              disabled={(item.variant && item.quantity >= item.variant.stock_quantity) || updateQuantity.isPending}
+                              onClick={() => updateQuantity.mutate({ item_id: item.id, quantity: item.quantity + 1 })}
+                            >
+                              <Plus className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                          <PriceDisplay priceInPaise={(item.variant?.price || 0) * item.quantity} size="md" className="font-semibold" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+
+              {/* ── Smart Upsell: Complete the Stack ── */}
+              {upsellProduct && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 pt-6 border-t border-brand-white/[0.04]"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="h-4 w-4 text-brand-gold" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-brand-white">Complete the stack</span>
+                  </div>
+                  
+                  <div className="flex gap-4 p-4 rounded-xl bg-brand-white/[0.02] border border-brand-white/[0.04]">
+                    <div className="relative h-20 w-16 rounded-lg overflow-hidden shrink-0 bg-[#0F0D0A]">
                       <Image
-                        src={"/placeholder-product.jpg"}
-                        alt={item.variant.name}
+                        src={
+                          upsellProduct.images && upsellProduct.images.length > 0 
+                            ? (typeof upsellProduct.images[0] === 'string' ? upsellProduct.images[0] : (upsellProduct.images[0] as any).image_url)
+                            : "/placeholder-product.jpg"
+                        }
+                        alt={upsellProduct.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="object-cover"
+                        unoptimized
                       />
                     </div>
-                    <div className="flex flex-1 flex-col justify-between py-1">
+                    <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-semibold text-base leading-snug tracking-tight text-foreground pr-4">
-                            {item.variant.name}
-                          </h4>
-                          <button 
-                            onClick={() => removeItem.mutate(item.id)}
-                            className="text-muted-foreground/40 hover:text-destructive transition-colors shrink-0 mt-0.5"
-                            aria-label="Remove item"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1.5">
-                          {item.variant.sku ? `SKU: ${item.variant.sku}` : "Standard Variant"}
+                        <h5 className="font-semibold text-sm leading-tight text-foreground mb-1">
+                          {upsellProduct.name}
+                        </h5>
+                        <p className="text-[11px] text-muted-foreground leading-snug">
+                          Customers who buy {cart.items[0]?.variant?.name || "this"} also add this.
                         </p>
                       </div>
-                      
-                      <div className="flex items-end justify-between mt-4">
-                        <div className="flex items-center border border-border rounded-full bg-background overflow-hidden h-9">
-                          <button
-                            className="w-9 h-full flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
-                            disabled={item.quantity <= 1 || updateQuantity.isPending}
-                            onClick={() => updateQuantity.mutate({ item_id: item.id, quantity: item.quantity - 1 })}
-                          >
-                            <Minus className="h-3.5 w-3.5" />
-                          </button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <button
-                            className="w-9 h-full flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
-                            disabled={item.quantity >= item.variant.stock_quantity || updateQuantity.isPending}
-                            onClick={() => updateQuantity.mutate({ item_id: item.id, quantity: item.quantity + 1 })}
-                          >
-                            <Plus className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                        <PriceDisplay priceInPaise={item.variant.price * item.quantity} size="md" className="font-semibold" />
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-sm font-medium text-brand-gold">
+                          {formatPrice(upsellProduct.variants![0].price)}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 px-3 text-xs bg-brand-white/10 hover:bg-brand-white/20 text-brand-white rounded-full font-medium transition-all"
+                          disabled={addToCart.isPending}
+                          onClick={handleUpsellAdd}
+                        >
+                          {addToCart.isPending ? "Adding..." : "Add +"}
+                        </Button>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                  </div>
+                </motion.div>
+              )}
             </div>
           )}
         </div>
 
         {cart && cart.items.length > 0 && (
-          <div className="border-t border-border bg-background pt-6 pb-8 px-6 shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
+          <div className="shrink-0 border-t border-border bg-background pt-6 pb-8 px-6 shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
             <div className="flex justify-between mb-3 text-base">
               <span className="text-muted-foreground">Subtotal</span>
               <motion.span 
