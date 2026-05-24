@@ -87,16 +87,14 @@ export function PremiumHero() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
+          <CinematicHeader
+            as="h1"
             className="font-serif text-6xl sm:text-7xl md:text-[6.5rem] lg:text-[7.5rem] tracking-tight leading-[0.95] text-brand-white drop-shadow-2xl"
           >
             Stronger<br />
             mornings<br />
             <span className="text-brand-gold italic">start here.</span>
-          </motion.h1>
+          </CinematicHeader>
 
           {/* Supporting Copy */}
           <motion.p
