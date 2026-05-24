@@ -22,7 +22,7 @@ export function PremiumHero() {
 
   // Parallax layer speeds (creating 3D depth)
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);          // Slowest (Background)
-  const midY = useTransform(scrollYProgress, [0, 1], ["0%", "60%"]);         // Medium (Mid-ground object)
+
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);       // Fast/Reverse (Foreground Text)
   
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
@@ -38,35 +38,21 @@ export function PremiumHero() {
         className="absolute inset-0 z-0"
       >
         <Image
-          src="/hero-wellness.png"
+          src="/luxury_wellness_hero.png"
           alt="Premium wellness ambient background"
           fill
           priority
+          quality={100}
+          unoptimized
           sizes="100vw"
-          className="object-cover object-center opacity-40 blur-sm scale-110"
+          className="object-cover object-center opacity-70 scale-105"
         />
         {/* Ambient occlusion / Shadows */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.1)_0%,_transparent_60%)] mix-blend-screen" />
       </motion.div>
 
-      {/* ── LAYER 2: Mid-ground Parallax (The Product/Bowl) ── */}
-      {/* Note: Requires a transparent PNG for true 3D effect. Currently using placeholder product asset. */}
-      <motion.div
-        style={{ y: midY }}
-        className="absolute inset-0 z-10 flex items-center justify-center lg:justify-end lg:pr-24 pointer-events-none"
-      >
-        <div className="relative w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] opacity-90 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
-          <Image
-            src="/products/pintola.png"
-            alt="Hero featured product"
-            fill
-            sizes="(max-width: 768px) 400px, 800px"
-            className="object-contain"
-            priority
-          />
-        </div>
-      </motion.div>
+
 
       {/* ── LAYER 3: Foreground Content ── */}
       <motion.div
