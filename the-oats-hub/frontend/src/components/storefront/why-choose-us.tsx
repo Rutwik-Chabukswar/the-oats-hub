@@ -2,6 +2,7 @@
 
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
 import { ShieldCheck, Recycle, Award, Zap } from "lucide-react";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 const reasons = [
   {
@@ -38,9 +39,9 @@ export function WhyChooseUs() {
             </span>
             <div className="h-[1px] w-6 bg-brand-gold/50" />
           </div>
-          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1.05] text-brand-white">
+          <CinematicHeader className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1.05] text-brand-white">
             Why <span className="italic text-brand-white/90">The Oats Hub?</span>
-          </h2>
+          </CinematicHeader>
           <p className="mt-6 text-brand-white/50 max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed">
             We believe nutrition should be pure, transparent, and extraordinary.
           </p>

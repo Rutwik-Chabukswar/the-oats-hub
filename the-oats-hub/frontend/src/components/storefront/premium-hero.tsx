@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 /* ── Easing ── */
 const EASE = [0.16, 1, 0.3, 1] as const;

@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
 import { ShieldCheck, Truck, Star, Users } from "lucide-react";
 import { useInView, animate } from "framer-motion";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 const trustItems = [
   { icon: ShieldCheck, target: 100, suffix: "%", label: "Authentic & Natural" },
@@ -85,9 +86,9 @@ export function TrustSection() {
             </span>
             <div className="h-[1px] w-6 bg-brand-gold/50" />
           </div>
-          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
+          <CinematicHeader className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
             What Our <span className="italic text-brand-white/40">Customers Say.</span>
-          </h2>
+          </CinematicHeader>
         </ScrollReveal>
 
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/ecommerce/product-card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 export function ProductShowcase() {
   const { data, isLoading } = useProducts({ featured: true, per_page: 4 });
@@ -27,9 +28,9 @@ export function ProductShowcase() {
                   Curated Selection
                 </span>
               </div>
-              <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
-                Featured <span className="text-brand-white/40 italic">Collection.</span>
-              </h2>
+              <CinematicHeader className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight leading-[1] text-brand-white">
+                Curated <span className="italic text-brand-white/40">Excellence.</span>
+              </CinematicHeader>
             </div>
             
             <Link

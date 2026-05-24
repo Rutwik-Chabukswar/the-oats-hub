@@ -2,6 +2,7 @@
 
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
 import { Flame, Wheat, Droplets, Sun } from "lucide-react";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 const benefits = [
   {
@@ -41,9 +42,9 @@ export function ProductBenefits() {
             </span>
             <div className="h-[1px] w-6 bg-brand-gold/50" />
           </div>
-          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
+          <CinematicHeader className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
             More than just <span className="italic text-brand-white/40">oats.</span>
-          </h2>
+          </CinematicHeader>
         </ScrollReveal>
 
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-brand-white/[0.04] rounded-2xl overflow-hidden shadow-2xl">

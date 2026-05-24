@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ScrollReveal } from "./scroll-reveal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 export function PremiumCTA() {
   return (
@@ -22,9 +23,9 @@ export function PremiumCTA() {
             </span>
             <div className="h-[1px] w-6 bg-brand-gold/50" />
           </div>
-          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight text-brand-white leading-[1.05]">
+          <CinematicHeader className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight text-brand-white leading-[1.05]">
             Your best mornings<br /><span className="italic text-brand-white/90">begin here.</span>
-          </h2>
+          </CinematicHeader>
           <p className="mt-8 text-lg md:text-xl text-brand-white/50 max-w-xl mx-auto leading-relaxed font-light">
             Join thousands of wellness-conscious individuals who have elevated their daily nutrition with The Oats Hub.
           </p>
