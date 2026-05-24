@@ -1,23 +1,23 @@
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col bg-transparent">
+    <div className="flex flex-col p-4 md:p-5 rounded-2xl border border-brand-white/[0.04] bg-[#0A0A0A]">
       {/* ── Image Area Skeleton ── */}
-      <div className="relative aspect-[4/5] rounded-2xl mb-5 overflow-hidden shimmer-gold" />
+      <div className="relative w-full aspect-[4/5] rounded-xl mb-5 overflow-hidden shimmer-gold" />
 
       {/* ── Text Content Skeleton ── */}
       <div className="flex flex-col flex-grow px-1">
-        <div className="flex flex-col gap-2 mb-4 mt-1">
+        <div className="flex flex-col gap-2 mb-4">
           {/* Category */}
           <div className="h-2.5 w-24 rounded-full shimmer-gold" />
           {/* Title */}
-          <div className="h-6 sm:h-7 w-[90%] rounded-md shimmer-gold mt-1.5" />
-          <div className="h-6 sm:h-7 w-[60%] rounded-md shimmer-gold" />
+          <div className="h-5 sm:h-6 w-[90%] rounded-md shimmer-gold mt-1.5" />
+          <div className="h-5 sm:h-6 w-[60%] rounded-md shimmer-gold" />
         </div>
 
         {/* Footer: Price & Rating */}
-        <div className="mt-auto flex items-center justify-between pt-2">
-          <div className="h-5 w-20 rounded-md shimmer-gold" />
-          <div className="h-4 w-16 rounded-md shimmer-gold opacity-60" />
+        <div className="mt-auto flex items-center justify-between pt-3 border-t border-brand-white/[0.04]">
+          <div className="h-4 w-16 rounded-md shimmer-gold" />
+          <div className="h-3 w-12 rounded-md shimmer-gold opacity-60" />
         </div>
       </div>
     </div>
