@@ -8,3 +8,4 @@ export { ProductBenefits } from "./product-benefits";
 export { TrustSection } from "./trust-section";
 export { PremiumCTA } from "./premium-cta";
 export { PremiumFooter } from "./premium-footer";
+export { CinematicIngredientShowcase } from "./cinematic-ingredient-showcase";

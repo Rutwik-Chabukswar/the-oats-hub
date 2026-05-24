@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title: product.name,
         description: product.description || `Buy ${product.name} at The Oats Hub.`,
-        images: product.images ? [{ url: product.images[0] }] : [],
+        images: product.images && product.images.length > 0 
+          ? [{ url: typeof product.images[0] === 'string' ? product.images[0] : (product.images[0] as any).image_url }] 
+          : [],
       },
     };
   } catch (error) {

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
   return (
-    <div className="flex-1 bg-background">
+    <div className="flex-1 bg-brand-black min-h-screen">
       <Suspense fallback={<div className="container mx-auto px-4 py-8"><ProductGridSkeleton count={12} /></div>}>
         <ProductListing />
       </Suspense>

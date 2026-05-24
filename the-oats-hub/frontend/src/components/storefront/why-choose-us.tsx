@@ -28,33 +28,37 @@ const reasons = [
 
 export function WhyChooseUs() {
   return (
-    <section className="py-24 md:py-32 bg-background">
+    <section className="py-24 md:py-32 bg-brand-black border-t border-brand-white/[0.02]">
       <div className="container px-6 md:px-8 mx-auto max-w-6xl">
-        <ScrollReveal className="text-center mb-20">
-          <span className="text-xs tracking-[0.25em] uppercase text-brand-gold/70 font-medium">
-            The Difference
-          </span>
-          <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-            Why The Oats Hub?
+        <ScrollReveal className="text-center mb-20 md:mb-24 flex flex-col items-center">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-[1px] w-6 bg-brand-gold/50" />
+            <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-brand-gold/70 font-medium">
+              The Difference
+            </span>
+            <div className="h-[1px] w-6 bg-brand-gold/50" />
+          </div>
+          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1.05] text-brand-white">
+            Why <span className="italic text-brand-white/90">The Oats Hub?</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
+          <p className="mt-6 text-brand-white/50 max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed">
             We believe nutrition should be pure, transparent, and extraordinary.
           </p>
         </ScrollReveal>
 
-        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {reasons.map((reason) => {
             const Icon = reason.icon;
             return (
               <StaggerItem key={reason.title}>
-                <div className="group p-8 rounded-2xl border border-border/50 bg-card transition-all duration-300 hover:border-brand-gold/20 hover:shadow-[0_8px_30px_-12px_rgba(201,168,76,0.08)]">
-                  <div className="h-11 w-11 rounded-xl bg-brand-gold/10 flex items-center justify-center mb-5 transition-colors group-hover:bg-brand-gold/15">
-                    <Icon className="h-5 w-5 text-brand-gold" />
+                <div className="group p-10 md:p-12 rounded-2xl border border-brand-white/[0.04] bg-[#0F0D0A] transition-all duration-500 hover:border-brand-gold/20 hover:bg-[#13110C]">
+                  <div className="h-12 w-12 rounded-full border border-brand-gold/20 flex items-center justify-center mb-8 transition-colors duration-500 group-hover:border-brand-gold/50 group-hover:bg-brand-gold/5">
+                    <Icon className="h-5 w-5 text-brand-gold/80 group-hover:text-brand-gold transition-colors duration-500" />
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground tracking-tight">
+                  <h3 className="font-serif text-2xl text-brand-white tracking-tight mb-3">
                     {reason.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-sm md:text-base leading-relaxed text-brand-white/50 font-light">
                     {reason.description}
                   </p>
                 </div>

@@ -1,13 +1,15 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
-import { ShieldCheck, Truck, Star, CreditCard } from "lucide-react";
+import { ShieldCheck, Truck, Star, Users } from "lucide-react";
+import { useInView, animate } from "framer-motion";
 
 const trustItems = [
-  { icon: ShieldCheck, stat: "100%", label: "Authentic & Natural" },
-  { icon: CreditCard, stat: "Secure", label: "Encrypted Payments" },
-  { icon: Truck, stat: "Fast", label: "Pan-India Delivery" },
-  { icon: Star, stat: "4.9★", label: "Customer Satisfaction" },
+  { icon: ShieldCheck, target: 100, suffix: "%", label: "Authentic & Natural" },
+  { icon: Users, target: 15000, suffix: "+", label: "Happy Customers" },
+  { icon: Truck, target: 48, suffix: "h", label: "Pan-India Dispatch" },
+  { icon: Star, target: 4.9, suffix: "★", label: "Customer Satisfaction", isFloat: true },
 ];
 
 const testimonials = [
@@ -28,22 +30,44 @@ const testimonials = [
   },
 ];
 
+function AnimatedCounter({ target, suffix, isFloat = false }: { target: number, suffix: string, isFloat?: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (inView && ref.current) {
+      const controls = animate(0, target, {
+        duration: 2.5,
+        ease: [0.16, 1, 0.3, 1], // Cinematic ease-out
+        onUpdate: (val) => {
+          if (ref.current) {
+            ref.current.textContent = isFloat ? val.toFixed(1) + suffix : Math.floor(val).toLocaleString() + suffix;
+          }
+        }
+      });
+      return () => controls.stop();
+    }
+  }, [inView, target, suffix, isFloat]);
+
+  return <span ref={ref}>0{suffix}</span>;
+}
+
 export function TrustSection() {
   return (
-    <section className="py-24 md:py-32 bg-brand-black">
-      <div className="container px-6 md:px-8 mx-auto max-w-6xl">
-        {/* Trust Stats */}
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24">
+    <section className="py-24 md:py-32 bg-brand-black border-t border-brand-white/[0.02]">
+      <div className="container px-6 md:px-12 mx-auto max-w-7xl">
+        {/* Trust Stats with Animated Counters */}
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-24 md:mb-32">
           {trustItems.map((item) => {
             const Icon = item.icon;
             return (
               <StaggerItem key={item.label}>
-                <div className="text-center p-6 rounded-2xl border border-brand-white/5 bg-brand-white/[0.02]">
-                  <Icon className="h-5 w-5 text-brand-gold mx-auto mb-3" />
-                  <p className="text-2xl md:text-3xl font-bold text-brand-white tracking-tight">
-                    {item.stat}
+                <div className="text-center p-8 md:p-10 rounded-2xl border border-brand-white/[0.03] bg-[#0F0D0A] transition-all duration-500 hover:border-brand-gold/20 hover:bg-[#13110C]">
+                  <Icon className="h-6 w-6 text-brand-gold/70 mx-auto mb-4" />
+                  <p className="font-serif text-3xl md:text-4xl text-brand-white tracking-tight mb-2 flex items-center justify-center">
+                    <AnimatedCounter target={item.target} suffix={item.suffix} isFloat={item.isFloat} />
                   </p>
-                  <p className="mt-1 text-xs tracking-widest uppercase text-brand-white/40 font-medium">
+                  <p className="text-[9px] tracking-[0.2em] uppercase text-brand-white/40 font-medium">
                     {item.label}
                   </p>
                 </div>
@@ -53,31 +77,35 @@ export function TrustSection() {
         </StaggerContainer>
 
         {/* Testimonials */}
-        <ScrollReveal className="text-center mb-16">
-          <span className="text-xs tracking-[0.25em] uppercase text-brand-gold/70 font-medium">
-            Trusted by Thousands
-          </span>
-          <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-brand-white">
-            What Our Customers Say
+        <ScrollReveal className="text-center mb-16 md:mb-20 flex flex-col items-center">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-[1px] w-6 bg-brand-gold/50" />
+            <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-brand-gold/70 font-medium">
+              Community
+            </span>
+            <div className="h-[1px] w-6 bg-brand-gold/50" />
+          </div>
+          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1] text-brand-white">
+            What Our <span className="italic text-brand-white/40">Customers Say.</span>
           </h2>
         </ScrollReveal>
 
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((t, i) => (
             <StaggerItem key={i}>
-              <div className="p-8 rounded-2xl border border-brand-white/5 bg-brand-white/[0.02] flex flex-col h-full">
+              <div className="p-10 md:p-12 rounded-2xl border border-brand-white/[0.04] bg-[#0F0D0A] flex flex-col h-full transition-all duration-500 hover:border-brand-gold/20">
                 {/* Stars */}
-                <div className="flex gap-1 mb-5">
+                <div className="flex gap-1.5 mb-8">
                   {[...Array(5)].map((_, j) => (
                     <Star key={j} className="h-4 w-4 fill-brand-gold text-brand-gold" />
                   ))}
                 </div>
-                <blockquote className="text-sm leading-relaxed text-brand-white/70 flex-1">
+                <blockquote className="font-serif text-lg md:text-xl leading-relaxed text-brand-white/90 flex-1 italic mb-8">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
-                <div className="mt-6 pt-6 border-t border-brand-white/5">
-                  <p className="text-sm font-semibold text-brand-white">{t.name}</p>
-                  <p className="text-xs text-brand-white/40 mt-0.5">{t.title}</p>
+                <div className="pt-6 border-t border-brand-white/[0.06]">
+                  <p className="text-sm font-medium tracking-wide text-brand-white uppercase">{t.name}</p>
+                  <p className="text-xs text-brand-white/40 mt-1 font-light tracking-wide">{t.title}</p>
                 </div>
               </div>
             </StaggerItem>

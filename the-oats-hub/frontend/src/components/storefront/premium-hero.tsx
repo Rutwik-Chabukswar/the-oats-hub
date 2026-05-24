@@ -1,95 +1,157 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
+import { MagneticButton } from "@/components/ui/magnetic-button";
+
+/* ── Easing ── */
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function PremiumHero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Track scroll within this section
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Parallax layer speeds (creating 3D depth)
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);          // Slowest (Background)
+  const midY = useTransform(scrollYProgress, [0, 1], ["0%", "60%"]);         // Medium (Mid-ground object)
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);       // Fast/Reverse (Foreground Text)
+  
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-brand-black">
-      {/* Subtle radial gradient backdrop */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.08)_0%,_transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(201,168,76,0.04)_0%,_transparent_50%)]" />
-      </div>
+    <section
+      ref={containerRef}
+      className="relative min-h-[100svh] w-full overflow-hidden flex items-center bg-[#050403]"
+    >
+      {/* ── LAYER 1: Deep Background ── */}
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-0 z-0"
+      >
+        <Image
+          src="/hero-wellness.png"
+          alt="Premium wellness ambient background"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-40 blur-sm scale-110"
+        />
+        {/* Ambient occlusion / Shadows */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,168,76,0.1)_0%,_transparent_60%)] mix-blend-screen" />
+      </motion.div>
 
-      {/* Fine grain texture overlay */}
-      <div className="absolute inset-0 z-[1] opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")" }} />
+      {/* ── LAYER 2: Mid-ground Parallax (The Product/Bowl) ── */}
+      {/* Note: Requires a transparent PNG for true 3D effect. Currently using placeholder product asset. */}
+      <motion.div
+        style={{ y: midY }}
+        className="absolute inset-0 z-10 flex items-center justify-center lg:justify-end lg:pr-24 pointer-events-none"
+      >
+        <div className="relative w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] opacity-90 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+          <Image
+            src="/products/pintola.png"
+            alt="Hero featured product"
+            fill
+            sizes="(max-width: 768px) 400px, 800px"
+            className="object-contain"
+            priority
+          />
+        </div>
+      </motion.div>
 
-      <div className="container relative z-10 px-6 md:px-8 mx-auto">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Label */}
+      {/* ── LAYER 3: Foreground Content ── */}
+      <motion.div
+        style={{ y: textY, opacity: contentOpacity }}
+        className="container relative z-20 px-6 md:px-12 mx-auto"
+      >
+        <div className="w-full max-w-3xl pt-20 md:pt-0">
+          {/* Pre-title accent */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.47, 0.32, 0.98] }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: EASE }}
+            className="flex items-center gap-4 mb-8 md:mb-10 drop-shadow-md"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-brand-gold/80 border border-brand-gold/20 rounded-full mb-8">
-              Premium Wellness Nutrition
+            <div className="h-[1px] w-10 bg-brand-gold" />
+            <span className="text-[10px] md:text-xs font-medium tracking-[0.3em] uppercase text-brand-gold shadow-black drop-shadow-lg">
+              Crafted for Wellness
             </span>
           </motion.div>
 
-          {/* Headline */}
+          {/* Main Headline */}
           <motion.h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-brand-white leading-[0.95]"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
+            className="font-serif text-6xl sm:text-7xl md:text-[6.5rem] lg:text-[7.5rem] tracking-tight leading-[0.95] text-brand-white drop-shadow-2xl"
           >
-            Nourish Your
-            <br />
-            <span className="text-brand-gold">Potential.</span>
+            Stronger<br />
+            mornings<br />
+            <span className="text-brand-gold italic">start here.</span>
           </motion.h1>
 
-          {/* Subheadline */}
+          {/* Supporting Copy */}
           <motion.p
-            className="mt-8 text-lg md:text-xl text-brand-white/60 max-w-2xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 1, delay: 0.8, ease: EASE }}
+            className="mt-10 md:mt-14 text-base md:text-lg text-brand-white/80 max-w-md leading-relaxed font-light pl-4 md:pl-12 border-l border-brand-gold/30 drop-shadow-xl bg-brand-black/20 backdrop-blur-sm p-4 rounded-r-xl"
           >
-            Handcrafted rolled oats, artisan peanut butter, and clean-label superfoods.
-            Sourced with care, designed for your best mornings.
+            Premium oats, artisan peanut butter, and clean-label superfoods — 
+            handcrafted in small batches for people who take their health seriously.
           </motion.p>
 
-          {/* CTAs */}
+          {/* Dual CTAs */}
           <motion.div
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 1, delay: 1.1, ease: EASE }}
+            className="mt-10 md:mt-16 pl-4 md:pl-12 flex flex-col sm:flex-row items-start sm:items-center gap-5"
           >
+            <MagneticButton magneticPull={0.25} className="inline-block">
+              <Link
+                href="/products"
+                className="group inline-flex items-center gap-3 h-14 px-8 bg-brand-gold text-brand-black font-semibold tracking-wide rounded-full transition-all duration-300 hover:bg-brand-gold-light hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] active:scale-[0.97]"
+              >
+                <span>Shop Collection</span>
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </MagneticButton>
+
             <Link
-              href="/products"
-              className="group inline-flex items-center gap-2 h-14 px-10 bg-brand-gold text-brand-black font-semibold rounded-full transition-all duration-200 hover:bg-brand-gold-light active:scale-[0.97]"
+              href="/about"
+              className="group inline-flex items-center gap-3 text-sm font-medium text-brand-white/80 hover:text-brand-gold transition-colors duration-300 tracking-wide drop-shadow-md"
             >
-              Explore Collection
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/categories/peanut-butter"
-              className="inline-flex items-center gap-2 h-14 px-10 border border-brand-white/15 text-brand-white/80 font-medium rounded-full transition-all duration-200 hover:border-brand-white/30 hover:text-brand-white active:scale-[0.97]"
-            >
-              Our Story
+              <span>Our Story</span>
+              <span className="block h-[1px] w-6 bg-current transition-all duration-300 group-hover:w-10" />
             </Link>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Scroll indicator */}
+      {/* ── Scroll Indicator ── */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
+        transition={{ delay: 1.8, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] tracking-[0.25em] uppercase text-brand-white/30 font-medium">Scroll</span>
+        <span className="text-[9px] tracking-[0.25em] uppercase text-brand-white/40 font-medium">
+          Explore
+        </span>
         <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-        >
-          <ChevronDown className="h-4 w-4 text-brand-white/25" />
-        </motion.div>
+          animate={{ y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+          className="w-[1px] h-6 bg-gradient-to-b from-brand-gold/60 to-transparent"
+        />
       </motion.div>
     </section>
   );

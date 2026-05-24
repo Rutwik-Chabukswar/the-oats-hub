@@ -39,19 +39,25 @@ export function ProductImage({
       )}
       {...props}
     >
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        width={!fill ? width : undefined}
-        height={!fill ? height : undefined}
-        priority={priority}
-        className={cn(
-          "object-cover transition-all duration-500",
-          isLoading ? "scale-105 blur-sm" : "scale-100 blur-0"
-        )}
-        onLoad={() => setIsLoading(false)}
-      />
+      {src && (typeof src !== "string" || src.trim() !== "") ? (
+        <Image
+          src={src}
+          alt={alt || "Product image"}
+          fill={fill}
+          width={!fill ? width : undefined}
+          height={!fill ? height : undefined}
+          priority={priority}
+          className={cn(
+            "object-cover transition-all duration-500",
+            isLoading ? "scale-105 blur-sm" : "scale-100 blur-0"
+          )}
+          onLoad={() => setIsLoading(false)}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-muted/50 text-muted-foreground text-xs uppercase tracking-widest">
+          No Image
+        </div>
+      )}
     </div>
   )
 }

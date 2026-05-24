@@ -13,7 +13,10 @@ interface ProductGalleryProps {
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const mainImages = images?.length > 0 ? images : ["/placeholder-product.jpg"];
+  const rawImages = images?.length > 0 ? images : ["/placeholder-product.jpg"];
+  const mainImages = rawImages.map(img => 
+    typeof img === "string" ? img : ((img as any).image_url || "/placeholder-product.jpg")
+  );
 
   return (
     <div className="flex flex-col gap-4">
