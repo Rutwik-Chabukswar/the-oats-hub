@@ -89,7 +89,7 @@ export function BrandPhilosophy() {
         </motion.div>
 
         {/* ── Three Pillars — Staggered Editorial Layout ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-0 border-t border-brand-white/[0.06]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-0">
           {PILLARS.map((pillar, i) => (
             <motion.div
               key={pillar.label}
@@ -106,7 +106,7 @@ export function BrandPhilosophy() {
               }`}
             >
               {/* Ghosted Number */}
-              <span className="block font-serif text-6xl md:text-7xl text-brand-white/[0.03] leading-none mb-6 select-none transition-colors duration-700 group-hover:text-brand-gold/[0.08]">
+              <span className="block font-serif text-6xl md:text-7xl text-brand-white/[0.15] leading-none mb-6 select-none transition-colors duration-700 group-hover:text-brand-gold/[0.30]">
                 {pillar.number}
               </span>
 

@@ -26,7 +26,7 @@ const footerLinks = {
 
 export function PremiumFooter() {
   return (
-    <footer className="bg-brand-black border-t border-brand-white/5">
+    <footer className="bg-brand-black">
       <div className="container px-6 md:px-8 mx-auto max-w-7xl">
         {/* Main footer */}
         <div className="py-16 md:py-20 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">

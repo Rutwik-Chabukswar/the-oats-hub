@@ -6,7 +6,6 @@ import { useInfiniteProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/ecommerce/product-card";
 import { ProductGridSkeleton } from "@/components/ui/product-skeleton";
 import { ErrorState, EmptyState } from "@/components/ui/error-state";
-import { useCategories } from "@/hooks/useCategories";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -28,6 +27,19 @@ export function ProductListing() {
     setSearchValue(search || "");
   }, [search]);
 
+  // Define our new brand categories
+  const mockCategories = [
+    { id: "yogabar", name: "Yoga Bar" },
+    { id: "pintola", name: "Pintola" },
+    { id: "organic-cosmos", name: "Organic Cosmos" },
+  ];
+
+  const isMockCategory = mockCategories.find((c) => c.id === category_id);
+  
+  // If the selected category is a mock brand, we search by text instead of passing an invalid category UUID
+  const apiSearch = isMockCategory ? isMockCategory.name : search;
+  const apiCategoryId = isMockCategory ? undefined : category_id;
+
   const { 
     data, 
     isLoading, 
@@ -37,12 +49,13 @@ export function ProductListing() {
     isFetchingNextPage 
   } = useInfiniteProducts({ 
     per_page: 12,
-    category_id,
-    search,
+    category_id: apiCategoryId,
+    search: apiSearch,
     active_only: true
   });
 
-  const { data: categories } = useCategories();
+  // Override the backend categories with our brand categories for the dropdown
+  const categories = mockCategories;
 
   // Scroll memory logic
   useEffect(() => {

@@ -29,7 +29,7 @@ const reasons = [
 
 export function WhyChooseUs() {
   return (
-    <section className="py-24 md:py-32 bg-brand-black border-t border-brand-white/[0.02]">
+    <section className="py-24 md:py-32 bg-brand-black">
       <div className="container px-6 md:px-8 mx-auto max-w-6xl">
         <ScrollReveal className="text-center mb-20 md:mb-24 flex flex-col items-center">
           <div className="flex items-center gap-4 mb-6">

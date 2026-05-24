@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 /* ── Product Data ── */
-const PRODUCTS = [
+export const PRODUCTS = [
   {
     name: "Pintola",
     tagline: "High Protein Peanut Butter",
@@ -16,7 +16,7 @@ const PRODUCTS = [
     micro: "Vegan · Gluten-Free",
     image: "/products/pintola.png",
     alt: "Pintola High Protein Peanut Butter jar",
-    slug: "pintola-high-protein-peanut-butter",
+    slug: "pintola",
     accent: "rgba(139, 115, 60, 0.06)",
   },
   {
@@ -28,7 +28,7 @@ const PRODUCTS = [
     micro: "High Fibre · Gluten Free",
     image: "/products/yogabar-oats.png",
     alt: "Yoga Bar High Protein Oats pouch",
-    slug: "yogabar-crunchy-peanut-butter",
+    slug: "yogabar",
     accent: "rgba(100, 40, 140, 0.05)",
   },
   {
@@ -40,7 +40,7 @@ const PRODUCTS = [
     micro: "30 Servings · Veg Capsules",
     image: "/products/cosmos.png",
     alt: "Organic Cosmos Daily Wellness supplement box",
-    slug: "organic-cosmos-toc",
+    slug: "organic-cosmos",
     accent: "rgba(120, 160, 100, 0.05)",
   },
 ] as const;
@@ -119,13 +119,13 @@ function SectionHeader() {
 /* ────────────────────────────────────────────────────── */
 /*  PRODUCT SPREAD — Single Cinematic Magazine Spread    */
 /* ────────────────────────────────────────────────────── */
-interface ProductSpreadProps {
+export interface ProductSpreadProps {
   product: (typeof PRODUCTS)[number];
   index: number;
   reverse: boolean;
 }
 
-function ProductSpread({ product, index, reverse }: ProductSpreadProps) {
+export function ProductSpread({ product, index, reverse }: ProductSpreadProps) {
   const spreadRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: spreadRef,

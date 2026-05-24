@@ -58,6 +58,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} dark h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
+        {/* Global Ambient Neon Gold Glow Overlay */}
+        <div 
+          className="fixed inset-0 pointer-events-none z-[9999] mix-blend-screen opacity-[0.85]"
+          style={{
+            background: `
+              radial-gradient(circle at 50% -20%, rgba(201, 168, 76, 0.15), transparent 60%),
+              radial-gradient(circle at 80% 120%, rgba(201, 168, 76, 0.1), transparent 50%),
+              radial-gradient(circle at -20% 50%, rgba(201, 168, 76, 0.05), transparent 50%)
+            `
+          }}
+        />
         <AmbientCursor />
         <FlyToCart />
         <Providers>

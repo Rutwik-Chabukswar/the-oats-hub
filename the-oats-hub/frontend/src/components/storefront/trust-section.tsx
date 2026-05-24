@@ -61,7 +61,7 @@ function AnimatedCounter({ target, suffix, isFloat = false }: { target: number, 
 
 export function TrustSection() {
   return (
-    <section className="py-24 md:py-32 bg-brand-black border-t border-brand-white/[0.02]">
+    <section className="py-24 md:py-32 bg-brand-black">
       <div className="container px-6 md:px-12 mx-auto max-w-7xl">
         {/* Trust Stats with Animated Counters */}
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-24 md:mb-32">
