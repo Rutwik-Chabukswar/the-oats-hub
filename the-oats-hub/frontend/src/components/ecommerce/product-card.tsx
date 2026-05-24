@@ -35,7 +35,10 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col bg-transparent transition-all duration-500",
+        "group relative flex flex-col p-4 md:p-5 rounded-2xl",
+        "transition-colors duration-500 ease-out",
+        "border border-brand-white/[0.04] bg-[#0A0A0A]",
+        "hover:border-brand-gold/20 hover:bg-[#13110C]",
         className
       )}
     >
@@ -44,12 +47,16 @@ export function ProductCard({
       </Link>
 
       {/* ── Image Area ── */}
-      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#0F0D0A] border border-brand-white/[0.04] mb-5">
+      {/* 
+        - aspect-[4/5] = fixed height, never reflows 
+        - overflow-hidden = scale stays contained 
+      */}
+      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-xl bg-[#0F0D0A] mb-5">
         {/* Ambient background glow inside the image container */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.05)_0%,_transparent_70%)] pointer-events-none z-0" />
         
         {/* Badges Overlay */}
-        <div className="absolute left-4 top-4 z-20 flex flex-col gap-2">
+        <div className="absolute left-3 top-3 z-20 flex flex-col gap-2">
           {isOutOfStock ? (
             <ProductBadge variant="limited" label="Out of Stock" />
           ) : compareAtPrice && compareAtPrice > price ? (
@@ -62,29 +69,29 @@ export function ProductCard({
           alt={product.name}
           fill
           priority={priorityImage}
-          className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105 z-10"
+          className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.04] z-10"
         />
 
-        {/* Hover overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 z-10 pointer-events-none" />
+        {/* Hover overlay gradient - fades up slowly, not snapping */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100 z-10 pointer-events-none" />
       </div>
 
       {/* ── Text Content ── */}
       <div className="flex flex-col flex-grow px-1">
-        <div className="flex flex-col gap-1.5 mb-3">
+        <div className="flex flex-col gap-1.5 mb-4">
           <span className="text-[9px] font-medium uppercase tracking-[0.25em] text-brand-gold/70">
             {product.category || "The Oats Hub"}
           </span>
-          <h3 className="font-serif text-xl sm:text-2xl leading-[1.1] text-brand-white group-hover:text-brand-gold transition-colors duration-300">
+          <h3 className="font-serif text-lg sm:text-xl leading-[1.2] text-brand-white group-hover:text-brand-gold transition-colors duration-500">
             {product.name}
           </h3>
         </div>
 
-        <div className="mt-auto flex items-center justify-between pt-2">
+        <div className="mt-auto flex items-center justify-between pt-3 border-t border-brand-white/[0.04]">
           <PriceDisplay
             priceInPaise={price}
             compareAtPriceInPaise={compareAtPrice}
-            size="md"
+            size="sm"
             className="text-brand-white/90 font-light"
           />
           <RatingDisplay rating={5.0} count={12} size="sm" />

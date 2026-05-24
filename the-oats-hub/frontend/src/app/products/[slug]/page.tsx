@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { productService } from "@/services/product.service";
 import { ProductDetail } from "@/components/ecommerce/product-detail";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -45,20 +44,40 @@ export default async function ProductPage({ params }: Props) {
 
 function ProductDetailSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        <Skeleton className="w-full aspect-square rounded-2xl" />
-        <div className="space-y-6">
-          <Skeleton className="h-10 w-3/4" />
-          <Skeleton className="h-6 w-1/4" />
-          <div className="space-y-2 mt-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-            <Skeleton className="h-4 w-4/6" />
+    <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl pt-8 pb-16 md:pt-16 md:pb-24">
+      <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
+        {/* Left: Gallery Skeleton */}
+        <div className="w-full">
+          <div className="md:sticky md:top-24">
+            <div className="w-full aspect-square md:aspect-[4/5] rounded-2xl shimmer-gold mb-4" />
+            <div className="flex gap-4 overflow-hidden pt-2">
+              <div className="w-20 h-20 rounded-xl shimmer-gold" />
+              <div className="w-20 h-20 rounded-xl shimmer-gold" />
+            </div>
           </div>
-          <Skeleton className="h-12 w-32 mt-6" />
+        </div>
+
+        {/* Right: Info Skeleton */}
+        <div className="w-full space-y-8 pt-4">
+          <div className="space-y-4">
+            <div className="h-3 w-32 rounded-full shimmer-gold" />
+            <div className="h-10 md:h-12 w-[90%] rounded-md shimmer-gold" />
+            <div className="h-10 md:h-12 w-[70%] rounded-md shimmer-gold" />
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="h-8 w-24 rounded-md shimmer-gold" />
+            <div className="h-4 w-32 rounded-md shimmer-gold opacity-60" />
+          </div>
+
+          <div className="space-y-3 pt-6 border-t border-brand-white/[0.04]">
+            <div className="h-4 w-full rounded-md shimmer-gold" />
+            <div className="h-4 w-[85%] rounded-md shimmer-gold" />
+            <div className="h-4 w-[60%] rounded-md shimmer-gold" />
+          </div>
+
           <div className="pt-8">
-            <Skeleton className="h-12 w-full rounded-full" />
+            <div className="h-14 w-full rounded-full shimmer-gold" />
           </div>
         </div>
       </div>

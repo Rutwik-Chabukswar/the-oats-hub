@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/ecommerce/product-card";
+import { ProductCardSkeleton } from "@/components/ui/product-skeleton";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
 import { CinematicHeader } from "@/components/ui/cinematic-header";
 
@@ -47,7 +48,7 @@ export function ProductShowcase() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="aspect-[4/5] bg-brand-white/[0.02] rounded-2xl animate-pulse" />
+              <ProductCardSkeleton key={i} />
             ))}
           </div>
         ) : products.length > 0 ? (

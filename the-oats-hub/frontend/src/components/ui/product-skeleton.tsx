@@ -1,5 +1,3 @@
-import { Skeleton } from "@/components/ui/skeleton";
-
 export function ProductCardSkeleton() {
   return (
     <div className="flex flex-col bg-transparent">
