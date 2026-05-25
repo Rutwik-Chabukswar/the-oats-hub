@@ -30,7 +30,7 @@ export function PremiumHero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[100svh] w-full overflow-hidden flex items-center bg-[#050403]"
+      className="relative min-h-[100svh] w-full overflow-hidden flex items-center bg-[#0F0D0A]"
     >
       {/* ── LAYER 1: Deep Background ── */}
       <motion.div
@@ -53,6 +53,9 @@ export function PremiumHero() {
       </motion.div>
 
 
+
+      {/* ── LAYER 2: Atmospheric Glow ── */}
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] z-0 pointer-events-none blur-3xl bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.04)_0%,_transparent_70%)]" />
 
       {/* ── LAYER 3: Foreground Content ── */}
       <motion.div

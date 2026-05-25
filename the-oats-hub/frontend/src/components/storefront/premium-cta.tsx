@@ -8,7 +8,7 @@ import { CinematicHeader } from "@/components/ui/cinematic-header";
 
 export function PremiumCTA() {
   return (
-    <section className="py-32 md:py-48 bg-brand-black relative overflow-hidden">
+    <section className="py-32 md:py-48 bg-[#0A0805] relative overflow-hidden">
       {/* Subtle accent glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.06)_0%,_transparent_70%)] blur-3xl" />

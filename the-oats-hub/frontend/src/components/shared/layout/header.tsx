@@ -38,6 +38,7 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-[#0A0A0A]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0A0A0A]/60">
+        <div className="w-full h-[1px]" style={{ background: "linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent)" }} />
         <div className="container flex h-16 items-center justify-between px-4 md:px-6 mx-auto relative z-50">
           
           {/* Mobile Hamburger Toggle */}

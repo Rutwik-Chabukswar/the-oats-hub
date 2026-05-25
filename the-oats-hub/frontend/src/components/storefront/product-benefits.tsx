@@ -33,11 +33,11 @@ export function ProductBenefits() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-24 md:py-32 bg-brand-black relative overflow-hidden">
-      {/* Accent gradient */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.03)_0%,_transparent_70%)] blur-3xl pointer-events-none" />
+    <section className="py-24 md:py-32 bg-[#0A0805] relative overflow-hidden">
+      {/* Atmospheric Glow */}
+      <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[600px] h-[600px] z-0 pointer-events-none blur-3xl bg-[radial-gradient(circle_at_center,_rgba(201,168,76,0.04)_0%,_transparent_70%)]" />
 
-      <div className="container relative px-6 md:px-12 mx-auto max-w-7xl">
+      <div className="container relative z-10 px-6 md:px-12 mx-auto max-w-7xl">
         <ScrollReveal className="text-center mb-20 flex flex-col items-center">
           <div className="flex items-center gap-4 mb-6">
             <div className="h-[1px] w-6 bg-brand-gold/50" />
